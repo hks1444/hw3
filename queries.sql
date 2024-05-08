@@ -28,6 +28,7 @@ where stadium_name = _NAME_;
 delete from matchsession where session_id = _ID_;
 
 #5 (kendi takimi olmasini eklemek lazim)
+select team_id, team_name from team T where T.coach_username = _NAME_ and CURDATE() between T.contract_start and T.contract_finish;
 insert into matchsession (session_id, team_id, stadium_id, time_slot, date, assigned_jury_username)
 values ();
 
@@ -41,7 +42,7 @@ select stadium_name, stadium_country from stadium;
 #8
 select avg(rating), count(*) from matchsession M where M.assigned_jury_username = "o_ozcelik";
 
-#9 (kendine ait olmayan maç id'si girerse izin vermememiz lazim, kod veya trigger)
+#9 (kendine ait olmayan maç idsi girerse izin vermememiz lazim, kod veya trigger)
 select session_id from matchsession where assigned_jury_username = _NAME_ and rating = null;
 update matchsession set rating = _RATING_ where session_id = _ID_;
 
@@ -67,7 +68,3 @@ with playercounts as
 
 select avg(height) from player P where P.username in 
 (select username from playercounts where count = (select max(count) from playercounts));
-
-player için team ve position required olacak
-Oyuncunun maçta kendi mevkisi dışında oynatılamaması
-Bir koçun sözleşmesi varsa başka takıma yazılamaması

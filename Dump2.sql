@@ -25,8 +25,9 @@ DROP TABLE IF EXISTS `channel`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `channel` (
-  `channel_id` int DEFAULT NULL,
-  `channel_name` text
+  `channel_id` int NOT NULL,
+  `channel_name` text,
+  PRIMARY KEY (`channel_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -130,12 +131,19 @@ CREATE TABLE `matchsession` (
   `stadium_id` int DEFAULT NULL,
   `time_slot` int DEFAULT NULL,
   `date` date DEFAULT NULL,
-  `assigned_jury_username` text,
+  `assigned_jury_username` varchar(500) DEFAULT NULL,
   `rating` float DEFAULT NULL,
   PRIMARY KEY (`session_id`),
   KEY `stadium_id` (`stadium_id`),
+  KEY `team_id` (`team_id`),
+  KEY `assigned_jury_username` (`assigned_jury_username`),
   CONSTRAINT `matchsession_ibfk_1` FOREIGN KEY (`stadium_id`) REFERENCES `stadium` (`stadium_id`) ON UPDATE CASCADE,
-  CONSTRAINT `matchsession_ibfk_2` FOREIGN KEY (`stadium_id`) REFERENCES `stadium` (`stadium_id`) ON UPDATE CASCADE
+  CONSTRAINT `matchsession_ibfk_2` FOREIGN KEY (`stadium_id`) REFERENCES `stadium` (`stadium_id`) ON UPDATE CASCADE,
+  CONSTRAINT `matchsession_ibfk_3` FOREIGN KEY (`stadium_id`) REFERENCES `stadium` (`stadium_id`) ON UPDATE CASCADE,
+  CONSTRAINT `matchsession_ibfk_4` FOREIGN KEY (`team_id`) REFERENCES `team` (`team_id`),
+  CONSTRAINT `matchsession_ibfk_5` FOREIGN KEY (`stadium_id`) REFERENCES `stadium` (`stadium_id`) ON UPDATE CASCADE,
+  CONSTRAINT `matchsession_ibfk_6` FOREIGN KEY (`team_id`) REFERENCES `team` (`team_id`),
+  CONSTRAINT `matchsession_ibfk_7` FOREIGN KEY (`assigned_jury_username`) REFERENCES `jury` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -187,8 +195,12 @@ DROP TABLE IF EXISTS `playerpositions`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `playerpositions` (
   `player_positions_id` int DEFAULT NULL,
-  `username` text,
-  `position` int DEFAULT NULL
+  `username` varchar(500) DEFAULT NULL,
+  `position` int DEFAULT NULL,
+  KEY `username` (`username`),
+  KEY `position` (`position`),
+  CONSTRAINT `playerpositions_ibfk_1` FOREIGN KEY (`username`) REFERENCES `player` (`username`),
+  CONSTRAINT `playerpositions_ibfk_2` FOREIGN KEY (`position`) REFERENCES `position` (`position_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -211,8 +223,12 @@ DROP TABLE IF EXISTS `playerteams`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `playerteams` (
   `player_teams_id` int DEFAULT NULL,
-  `username` text,
-  `team` int DEFAULT NULL
+  `username` varchar(500) DEFAULT NULL,
+  `team` int DEFAULT NULL,
+  KEY `username` (`username`),
+  KEY `team` (`team`),
+  CONSTRAINT `playerteams_ibfk_1` FOREIGN KEY (`username`) REFERENCES `player` (`username`),
+  CONSTRAINT `playerteams_ibfk_2` FOREIGN KEY (`team`) REFERENCES `team` (`team_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -234,8 +250,9 @@ DROP TABLE IF EXISTS `position`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `position` (
-  `position_ID` int DEFAULT NULL,
-  `position_name` text
+  `position_ID` int NOT NULL,
+  `position_name` text,
+  PRIMARY KEY (`position_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -259,11 +276,18 @@ DROP TABLE IF EXISTS `sessionsquads`;
 CREATE TABLE `sessionsquads` (
   `squad_id` int NOT NULL AUTO_INCREMENT,
   `session_id` int DEFAULT NULL,
-  `played_player_username` text,
+  `played_player_username` varchar(500) DEFAULT NULL,
   `position_id` int DEFAULT NULL,
   PRIMARY KEY (`squad_id`),
   KEY `session_id` (`session_id`),
-  CONSTRAINT `sessionsquads_ibfk_1` FOREIGN KEY (`session_id`) REFERENCES `matchsession` (`session_id`) ON DELETE CASCADE
+  KEY `played_player_username` (`played_player_username`),
+  KEY `position_id` (`position_id`),
+  CONSTRAINT `sessionsquads_ibfk_1` FOREIGN KEY (`session_id`) REFERENCES `matchsession` (`session_id`) ON DELETE CASCADE,
+  CONSTRAINT `sessionsquads_ibfk_2` FOREIGN KEY (`session_id`) REFERENCES `matchsession` (`session_id`) ON DELETE CASCADE,
+  CONSTRAINT `sessionsquads_ibfk_3` FOREIGN KEY (`session_id`) REFERENCES `matchsession` (`session_id`) ON DELETE CASCADE,
+  CONSTRAINT `sessionsquads_ibfk_4` FOREIGN KEY (`session_id`) REFERENCES `matchsession` (`session_id`),
+  CONSTRAINT `sessionsquads_ibfk_5` FOREIGN KEY (`played_player_username`) REFERENCES `player` (`username`),
+  CONSTRAINT `sessionsquads_ibfk_6` FOREIGN KEY (`position_id`) REFERENCES `position` (`position_ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -312,11 +336,15 @@ DROP TABLE IF EXISTS `team`;
 CREATE TABLE `team` (
   `team_id` int NOT NULL,
   `team_name` text,
-  `coach_username` text,
+  `coach_username` varchar(500) DEFAULT NULL,
   `contract_start` date DEFAULT NULL,
   `contract_finish` date DEFAULT NULL,
   `channel_id` int DEFAULT NULL,
-  PRIMARY KEY (`team_id`)
+  PRIMARY KEY (`team_id`),
+  KEY `coach_username` (`coach_username`),
+  KEY `channel_id` (`channel_id`),
+  CONSTRAINT `team_ibfk_1` FOREIGN KEY (`coach_username`) REFERENCES `coach` (`username`),
+  CONSTRAINT `team_ibfk_2` FOREIGN KEY (`channel_id`) REFERENCES `channel` (`channel_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -339,4 +367,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-07 14:42:50
+-- Dump completed on 2024-05-08  1:13:32

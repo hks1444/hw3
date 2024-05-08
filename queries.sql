@@ -67,3 +67,7 @@ with playercounts as
 
 select avg(height) from player P where P.username in 
 (select username from playercounts where count = (select max(count) from playercounts));
+
+player için team ve position required olacak
+Oyuncunun maçta kendi mevkisi dışında oynatılamaması
+Bir koçun sözleşmesi varsa başka takıma yazılamaması

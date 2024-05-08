@@ -21,6 +21,7 @@ export default function Home() {
         localStorage.setItem('username', username);
         localStorage.setItem('password', password);
         const responsedata = await response.json();
+        localStorage.setItem('role', responsedata.role);
         router.push(`/${responsedata.role}`);
       } else {
         setError('Invalid username or password');

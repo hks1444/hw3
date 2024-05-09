@@ -11,7 +11,7 @@ begin
     
     -- is there a conflict
     select count(*) into count_session from matchsession M
-    where new.stadium_id = M.username and new.date = M.date 
+    where new.stadium_id = M.stadium_id and new.date = M.date 
 			and (new.time_slot = M.time_slot or new.time_slot = M.time_slot-1 or new.time_slot = M.time_slot+1);
          
 	-- does the jury exist

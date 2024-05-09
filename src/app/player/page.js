@@ -16,7 +16,11 @@ export default function Home() {
   useEffect(() => {
     setUsername(localStorage.getItem('username'));
     setPassword(localStorage.getItem('password'));
-    redirectIfNoUser(router)
+    redirectIfNoUser(router);
+    const role = localStorage.getItem('role');
+    if (role !== 'player') {
+      router.push(`/${role}`);
+    }
   }, []);
   const seeHeight = async () => {
     const response = await fetch(`/api/seeHeight`, {

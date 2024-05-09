@@ -20,7 +20,11 @@ export default function Home() {
   useEffect(() => {
     setUsername(localStorage.getItem('username'));
     setPassword(localStorage.getItem('password'));
-    redirectIfNoUser(router)
+    redirectIfNoUser(router);
+    const role = localStorage.getItem('role');
+    if (role !== 'jury') {
+      router.push(`/${role}`);
+    }
   }, []);
   const seeAvgCount = async () => {
     const response = await fetch(`/api/seeAvg`, {

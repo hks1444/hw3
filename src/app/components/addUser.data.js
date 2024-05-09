@@ -32,7 +32,7 @@ const renderAddUser = (selectedOption, handleSubmit) => {
                         <li>
                             <label>
                                 birthdate
-                                <input required type="text" name="birthdate" />
+                                <input required type="date" name="birthdate" />
                             </label>
                         </li>
                         <li>
@@ -45,6 +45,18 @@ const renderAddUser = (selectedOption, handleSubmit) => {
                             <label>
                                 height
                                 <input required type="number" name="height" />
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                position list
+                                <input required type="text" name="positionlist" placeholder="1,2,3" />
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                team list
+                                <input required type="text" name="teamlist" placeholder="1,2,3" />
                             </label>
                         </li>
                     </ul>

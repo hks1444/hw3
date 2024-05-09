@@ -18,7 +18,11 @@ export default function Home() {
   useEffect(() => {
     setUsername(localStorage.getItem('username'));
     setPassword(localStorage.getItem('password'));
-    redirectIfNoUser(router)
+    redirectIfNoUser(router);
+    const role = localStorage.getItem('role');
+    if (role !== 'coach') {
+      router.push(`${role}`);
+    }
   }, []);
   const seeStadiums = async () => {
     const response = await fetch(`/api/seeStadiums`, {

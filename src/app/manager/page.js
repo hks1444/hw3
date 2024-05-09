@@ -17,14 +17,17 @@ export default function Home() {
     useEffect(() => {
         setUsername(localStorage.getItem('username'));
         setPassword(localStorage.getItem('password'));
-        redirectIfNoUser(router)
+        redirectIfNoUser(router);
+        const role = localStorage.getItem('role');
+        if (role !== 'manager') {
+            router.push(`/${role}`);
+        }
     }, []);
     const submitAddUser = async (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
         formData.append('type', selectedOption);
-        formData.append('username', username);
-        formData.append('password', password);
+        formData.append('role', localStorage.getItem('role'));
         const data = Object.fromEntries(formData);
         console.log(password, username);
         try {
@@ -36,7 +39,8 @@ export default function Home() {
             if (response.status === 200) {
                 window.location.reload();
             } else {
-                setError('Cannot add user. Please enter correct information or your credentials are not valid.');
+                const resdata = await response.json();
+                setError(resdata.error);
             }
         } catch (error) {
             console.error('An unexpected error occurred:', error);
@@ -46,8 +50,7 @@ export default function Home() {
     const submitStadium = async (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
-        formData.append('username', username);
-        formData.append('password', password);
+        formData.append('role', localStorage.getItem('role'));
         const data = Object.fromEntries(formData);
         console.log(password, username);
         try {

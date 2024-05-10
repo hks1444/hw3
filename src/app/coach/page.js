@@ -12,6 +12,7 @@ export default function Home() {
   const router = useRouter();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const [isSeeStadium, setIsSeeStadium] = useState(false);
   const [Stadiums, setStadiums] = useState('');
   const bindlogout = logout.bind({ router: router });
@@ -57,7 +58,8 @@ export default function Home() {
       if (response.status === 200) {
         window.location.reload();
       } else {
-        setError('You cannot delete this session.');
+        const data = await response.json();
+        setError(data.error);
       }
     } catch (error) {
       console.error('An unexpected error occurred:', error);
@@ -82,7 +84,8 @@ export default function Home() {
       if (response.status === 200) {
         window.location.reload();
       } else {
-        setError('You cannot add this session. Please enter correct information.');
+        const data = await response.json();
+        setError(data.error);
       }
     } catch (error) {
       console.error('An unexpected error occurred:', error);
@@ -107,7 +110,8 @@ export default function Home() {
       if (response.status === 200) {
         window.location.reload();
       } else {
-        setError('You cannot create this squad. Please enter correct information.');
+        const data = await response.json();
+        setError(data.error);
       }
     } catch (error) {
       console.error('An unexpected error occurred:', error);
@@ -117,6 +121,7 @@ export default function Home() {
   return (
     <main className="main">
       <h1>Coach</h1>
+      {error && <p>{error}</p>}
       {renderDeleteMatchSession(submitDelete)}
       {renderAddMatchSession(submitAdd)}
       {renderCreateSquad(submitSquad)}

@@ -24,13 +24,25 @@ should be left blank or null at first, till a jury logs in and rates the match. 
                 <li>
                     <label>
                         Date
-                        <input required type="text" name="date" />
+                        <input required type="date" name="date" />
                     </label>
                 </li>
                 <li>
                     <label>
                         Timeslot
                         <input required type="number" name="timeslot" />
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        Session ID
+                        <input required type="number" name="session_id" />
+                    </label>
+                </li>
+                <li>
+                    <label>
+                        Assigned Jury
+                        <input required type="text" name="jury" />
                     </label>
                 </li>
             </ul>

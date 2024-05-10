@@ -20,7 +20,11 @@ export default function Home() {
         redirectIfNoUser(router);
         const role = localStorage.getItem('role');
         if (role !== 'manager') {
-            router.push(`/${role}`);
+            if (role === null) {
+                router.push(`/`);
+            } else {
+                router.push(`/${role}`);
+            }
         }
     }, []);
     const submitAddUser = async (e) => {

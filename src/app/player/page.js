@@ -19,14 +19,18 @@ export default function Home() {
     redirectIfNoUser(router);
     const role = localStorage.getItem('role');
     if (role !== 'player') {
-      router.push(`/${role}`);
+      if (role === null) {
+        router.push(`/`);
+      } else {
+        router.push(`/${role}`);
+      }
     }
   }, []);
   const seeHeight = async () => {
     const response = await fetch(`/api/seeHeight`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({ username, password, role: localStorage.getItem('role') }),
     });
     const data = await response.json();
     setHeight(data.height);
@@ -37,7 +41,7 @@ export default function Home() {
     const response = await fetch(`/api/seeOtherPlayers`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({ username, password, role: localStorage.getItem('role') }),
     });
     const data = await response.json();
     const temp = data.others.join("\n");

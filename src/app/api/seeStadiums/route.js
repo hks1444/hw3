@@ -1,16 +1,17 @@
 import { NextResponse } from "next/server";
 import mysql from 'mysql2/promise';
-
+import dotenv from 'dotenv';
 export async function POST(req, res) {
   /*Coaches shall be able to see a list of all existing stadiums names and their
 countries.*/
+  dotenv.config();
   const data = await req.json();
   const username = data.username;
   const connection = await mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '19932003',
-    database: 'project3'
+    host: process.env.HOST,
+    user: process.env.DBUSER,
+    password: process.env.PASSWORD,
+    database: process.env.DATABASE
   });
   let sqlQuery = `select stadium_name, stadium_country from stadium;`;
   if (data.role !== "coach") {

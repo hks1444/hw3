@@ -1,15 +1,17 @@
 import { NextResponse } from "next/server";
 import mysql from 'mysql2/promise';
+import dotenv from 'dotenv';
 export async function POST(req, res) {
   /*Juries shall be able to rate a session that are assigned to them only if they
 haven’t rated that session yet and if the current date (like the date of the Demo
 :) ) is after the date of the specific match session.*/
+  dotenv.config();
   const data = await req.json();
   const connection = await mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '19932003',
-    database: 'project3'
+    host: process.env.HOST,
+    user: process.env.DBUSER,
+    password: process.env.PASSWORD,
+    database: process.env.DATABASE
   });
   let sqlQuery1 = `select x.session_id from project3.matchsession as x where x.assigned_jury_username = ? and x.rating is null and x.session_id = ? `;
   let sqlQuery2 = `update matchsession set rating = ? where session_id = ?;`;

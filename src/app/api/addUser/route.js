@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import mysql from 'mysql2/promise';
+import dotenv from 'dotenv';
 
 const validate = async (data, connection) => {
   let sqlQueryCheck1 = `select * from position where position_ID = ?;`;
@@ -25,12 +26,13 @@ const validate = async (data, connection) => {
 
 
 export async function POST(req, res) {
+  dotenv.config();
   const data = await req.json();
   const connection = await mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '19932003',
-    database: 'project3'
+    host: process.env.HOST,
+    user: process.env.DBUSER,
+    password: process.env.PASSWORD,
+    database: process.env.DATABASE
   });
   if (data.role !== "manager") {
     return NextResponse.json({ error: 'You are not authorized to add user' }, { status: 405 });

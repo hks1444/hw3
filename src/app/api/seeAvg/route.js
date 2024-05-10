@@ -1,16 +1,17 @@
 import { NextResponse } from "next/server";
 import mysql from 'mysql2/promise';
-
+import dotenv from 'dotenv';
 export async function POST(req, res) {
+  dotenv.config();
   /*Juries shall be able to view the average rating of all sessions that he/she rated
 also the count of total rated sessions by him/her. */
   const data = await req.json();
   const username = data.username;
   const connection = await mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '19932003',
-    database: 'project3'
+    host: process.env.HOST,
+    user: process.env.DBUSER,
+    password: process.env.PASSWORD,
+    database: process.env.DATABASE
   });
   let sqlQuery = `select avg(rating), count(*) from matchsession M where M.assigned_jury_username = ? and M.rating is not null;`;
   if (data.role !== "jury") {

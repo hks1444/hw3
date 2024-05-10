@@ -1,17 +1,17 @@
 import { NextResponse } from "next/server";
 import mysql from 'mysql2/promise';
-
+import dotenv from 'dotenv';
 export async function POST(req, res) {
+  dotenv.config();
   const data = await req.json();
   const username = data.username;
   const password = data.password;
   let user = null;
-
   const connection = await mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '19932003',
-    database: 'project3'
+    host: process.env.HOST,
+    user: process.env.DBUSER,
+    password: process.env.PASSWORD,
+    database: process.env.DATABASE
   });
 
   let sqlQueryCoach = `SELECT username, password FROM coach WHERE username = ? AND password = ?`;

@@ -1,18 +1,20 @@
 import { NextResponse } from "next/server";
 import mysql from 'mysql2/promise';
+import dotenv from 'dotenv';
 
 export async function POST(req, res) {
   /*Also a player should see the height
 of the player that he/she played with the most. If there are more than one
 players that he/she played the most, he/she should see the average height of
 those players*/
+  dotenv.config();
   const data = await req.json();
   const username = data.username;
   const connection = await mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '19932003',
-    database: 'project3'
+    host: process.env.HOST,
+    user: process.env.DBUSER,
+    password: process.env.PASSWORD,
+    database: process.env.DATABASE
   });
   let sqlQuery = `with playercounts as (select count(*) as count, A.played_player_username as username from (select S.played_player_username from sessionsquads S where S.session_id in (select session_id from sessionsquads where played_player_username = ?) and S.played_player_username != ?) A group by A.played_player_username) select avg(height) from player P where P.username in (select username from playercounts where count = (select max(count) from playercounts));`;
   if (data.role !== "player") {

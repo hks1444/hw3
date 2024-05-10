@@ -9,6 +9,12 @@ Coach shall be able to create squad using player names. */
             <ul className="input">
                 <li>
                     <label>
+                        session ID
+                        <input required type="number" name="session_id" />
+                    </label>
+                </li>
+                <li>
+                    <label>
                         Player 1 Name
                         <input required type="text" name="player1" />
                     </label>

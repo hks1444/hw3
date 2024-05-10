@@ -32,10 +32,10 @@ export default function Home() {
     const response = await fetch(`/api/seeStadiums`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({ username, password, role: localStorage.getItem('role') }),
     });
     const data = await response.json();
-    const temp = data.stadiums.join("\n");
+    const temp = data.stadiums.join(", ");
     setStadiums(temp);
     setIsSeeStadium(true);
   };
@@ -45,6 +45,7 @@ export default function Home() {
     const formData = new FormData(e.target);
     formData.append('username', username);
     formData.append('password', password);
+    formData.append('role', localStorage.getItem('role'));
     const data = Object.fromEntries(formData);
     console.log(password, username);
     try {
@@ -69,6 +70,7 @@ export default function Home() {
     const formData = new FormData(e.target);
     formData.append('username', username);
     formData.append('password', password);
+    formData.append('role', localStorage.getItem('role'));
     const data = Object.fromEntries(formData);
     console.log(password, username);
     try {
@@ -93,6 +95,7 @@ export default function Home() {
     const formData = new FormData(e.target);
     formData.append('username', username);
     formData.append('password', password);
+    formData.append('role', localStorage.getItem('role'));
     const data = Object.fromEntries(formData);
     console.log(password, username);
     try {

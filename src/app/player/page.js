@@ -13,6 +13,7 @@ export default function Home() {
   const [others, setOthers] = useState('');
   const [isOthers, setIsOthers] = useState(false);
   const bindlogout = logout.bind({ router: router });
+  const [error, setError] = useState('');
   useEffect(() => {
     setUsername(localStorage.getItem('username'));
     setPassword(localStorage.getItem('password'));
@@ -33,9 +34,14 @@ export default function Home() {
       body: JSON.stringify({ username, password, role: localStorage.getItem('role') }),
     });
     const data = await response.json();
-    setHeight(data.height);
-    setIsSeeHeight(true);
-    setIsOthers(false);
+    if (response.status === 200) {
+      setHeight(data.height);
+      setIsSeeHeight(true);
+      setIsOthers(false);
+      setError('');
+    } else {
+      setError(data.error);
+    }
   };
   const seeOthers = async () => {
     const response = await fetch(`/api/seeOtherPlayers`, {
@@ -44,15 +50,22 @@ export default function Home() {
       body: JSON.stringify({ username, password, role: localStorage.getItem('role') }),
     });
     const data = await response.json();
-    const temp = data.others.join("\n");
-    console.log(temp);
-    setOthers(temp);
-    setIsSeeHeight(false);
-    setIsOthers(true);
+    if (response.status === 200) {
+      const temp = data.others.join("\n");
+      console.log(temp);
+      setOthers(temp);
+      setIsSeeHeight(false);
+      setIsOthers(true);
+      setError('');
+    } else {
+      setError(data.error);
+    }
+
   };
   return (
     <main className="main">
       <h1>Player</h1>
+      {error && <p>{error}</p>}
       <div className="button">
         <button onClick={seeOthers}>See other players played with you</button>
         {isOthers ? <p>{others}</p> : <p>...</p>}

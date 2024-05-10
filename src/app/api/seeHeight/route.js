@@ -24,5 +24,7 @@ those players*/
     return NextResponse.json({ height: height }, { status: 200 })
   } catch (err) {
     return NextResponse.json({ error: 'Error occured while getting height of the player who played with you most.' }, { status: 405 });
+  } finally {
+    await connection.end();
   }
 }

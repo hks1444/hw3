@@ -34,12 +34,17 @@ export default function Home() {
     const response = await fetch(`/api/seeAvg`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({ username, password, role: localStorage.getItem('role') }),
     });
     const data = await response.json();
-    setAvg(data.average);
-    setCount(data.count);
-    setIsSeeAvgCount(true);
+    if (response.status === 200) {
+      setAvg(data.average);
+      setCount(data.count);
+      setIsSeeAvgCount(true);
+      setError('');
+    } else {
+      setError(data.error);
+    }
   };
   const submitRating = async (e) => {
     e.preventDefault();
@@ -47,6 +52,7 @@ export default function Home() {
     const formData = new FormData(e.target);
     formData.append('username', username);
     formData.append('password', password);
+    formData.append('role', localStorage.getItem('role'));
     const data = Object.fromEntries(formData);
     console.log(password, username);
     try {
@@ -55,10 +61,13 @@ export default function Home() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
+      const data2 = await response.json();
+      console.log(data2);
       if (response.status === 200) {
+        console.log(data2.msg);
         window.location.reload();
       } else {
-        setError('You cannot rate this session.');
+        setError(data2.error);
       }
     } catch (error) {
       console.error('An unexpected error occurred:', error);

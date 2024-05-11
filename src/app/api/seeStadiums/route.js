@@ -19,7 +19,7 @@ countries.*/
   }
   try {
     const [rescheck1] = await connection.execute(sqlQuery, []);
-    const stadiums = rescheck1.map((stadium) => stadium.stadium_name);
+    const stadiums = rescheck1.map((stadium) => stadium.stadium_name+" "+stadium.stadium_country);
     console.log(stadiums);
     return NextResponse.json({ stadiums: stadiums }, { status: 200 })
   } catch (err) {

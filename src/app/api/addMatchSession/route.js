@@ -14,6 +14,7 @@ export async function POST(req, res) {
 
   let sqlQuery1 = `select team_id from team T where T.team_id = ? and T.coach_username = ? and CURDATE() between T.contract_start and T.contract_finish; `;
   let sqlQuery2 = `insert into matchsession(session_id, team_id, stadium_id, time_slot, date, assigned_jury_username, rating) values(?,?,?,?,?,?,null)`;
+  let sqlQuery3 = `select max(session_id) from matchsession;`;
   if (data.role !== "coach") {
     return NextResponse.json({ error: 'You are not authorized create this match.' }, { status: 405 });
   }
@@ -24,8 +25,10 @@ export async function POST(req, res) {
   const date = data.date;
   const timeslot = data.timeslot;
   const jury = data.jury;
-  const session_id = data.session_id;
+  
   try {
+    const [id321] = await connection.execute(sqlQuery3, []);
+    const session_id = id321[0]['max(session_id)'] + 1; 
     const [check] = await connection.execute(sqlQuery1, [teamid, username]);
     if (check.length === 0) {
       throw new Error('Invalid team');

@@ -30,10 +30,10 @@ export async function POST(req, res) {
   let player6position = data.player6position;
   console.log(username, password);
   let connection = await mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '19932003',
-    database: 'project3'
+    host: process.env.HOST,
+    user: process.env.DBUSER,
+    password: process.env.PASSWORD,
+    database: process.env.DATABASE
   });
   let sqlQuery1 = `select T.team_id from team T, matchsession M where T.team_id = M.team_id and T.coach_username = ? and M.session_id = ? and CURDATE() between T.contract_start and T.contract_finish;  `;
   let sqlQuery2 = `insert into sessionsquads (squad_id, session_id, played_player_username, position_id) values (?,?,?,?),(?,?,?,?),(?,?,?,?),(?,?,?,?),(?,?,?,?),(?,?,?,?);`;

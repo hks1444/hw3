@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import mysql from 'mysql2/promise';
+import dotenv from 'dotenv';
 
 export async function POST(req, res) {
+  dotenv.config();
   const data = await req.json();
   const username = data.username;
   const password = data.password;
@@ -11,10 +13,11 @@ export async function POST(req, res) {
   let sqlQuery = "update stadium set stadium_name = ? where stadium_name = ?;";
   try {
     const connection = await mysql.createConnection({
-      host: 'localhost',
-      user: 'root',
-      password: '19932003',
-      database: 'project3'
+    host: process.env.HOST,
+    user: process.env.DBUSER,
+    password: process.env.PASSWORD,
+    database: process.env.DATABASE
+
     });
     const [res1] = await connection.execute(sqlQuery, [data.newStadiumName, data.currentStadiumName]);
   } catch (err) {

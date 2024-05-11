@@ -13,7 +13,7 @@ haven’t rated that session yet and if the current date (like the date of the D
     password: process.env.PASSWORD,
     database: process.env.DATABASE
   });
-  let sqlQuery1 = `select x.session_id from project3.matchsession as x where x.assigned_jury_username = ? and x.rating is null and x.session_id = ? `;
+  let sqlQuery1 = `select x.session_id, x.date from project3.matchsession as x where x.assigned_jury_username = ? and x.rating is null and x.session_id = ? `;
   let sqlQuery2 = `update matchsession set rating = ? where session_id = ?;`;
   if (data.role !== "jury") {
     return NextResponse.json({ error: 'You are not authorized rate this match.' }, { status: 405 });
@@ -28,6 +28,12 @@ haven’t rated that session yet and if the current date (like the date of the D
       console.log(check);
       if (check.length === 0) {
         throw new Error('Invalid match');
+      }else{
+        const date = check[0].date;
+        const currentDate = new Date();
+        if (currentDate < date) {
+          throw new Error('Invalid date');
+        }
       }
       const [insert] = await connection.execute(sqlQuery2, [rating, id]);
       return NextResponse.json({ msg: "ok" }, { status: 200 })

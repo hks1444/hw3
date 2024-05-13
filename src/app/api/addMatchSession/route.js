@@ -46,7 +46,7 @@ export async function POST(req, res) {
 }
 */
 
-let sqlQuery1 = `select team_id from team T where T.team_id = ? and T.coach_username = ? and CURDATE() between T.contract_start and T.contract_finish; `;
+let sqlQuery1 = `select team_id, T.contract_start, T.contract_finish from team T where T.team_id = ? and T.coach_username = ? and CURDATE() between T.contract_start and T.contract_finish; `;
 let sqlQuery2 = `insert into matchsession(session_id, team_id, stadium_id, time_slot, date, assigned_jury_username, rating) values(?,?,?,?,?,?,null)`;
 let sqlQuery3 = `select max(session_id) from matchsession;`;
 let sqlQuery4 = `select username from jury where name = ? and surname = ?;`;
@@ -72,8 +72,14 @@ try {
   if (check.length === 0) {
     throw new Error('Invalid team');
   } try {
+    const cont_start = new Date(check[0].contract_start);
+    const cont_finish = new Date(check[0].contract_finish);
+    const check_date = new Date(date);
+    if(cont_start > check_date || cont_finish < check_date){
+      throw new Error('Invalid date');
+    }
+    const [jury_username_lst] = await connection.execute(sqlQuery4, [jury_name, jury_surname]);
     try {
-      const [jury_username_lst] = await connection.execute(sqlQuery4, [jury_name, jury_surname]);
       if (jury_username.length === 0) {
         throw new Error('Invalid jury');
       } else {

@@ -13,13 +13,13 @@ countries.*/
     password: process.env.PASSWORD,
     database: process.env.DATABASE
   });
-  let sqlQuery = `select stadium_name, stadium_country from stadium;`;
+  let sqlQuery = `select stadium_id, stadium_name, stadium_country from stadium;`;
   if (data.role !== "coach") {
     return NextResponse.json({ error: 'You are not authorized to see height' }, { status: 405 });
   }
   try {
     const [rescheck1] = await connection.execute(sqlQuery, []);
-    const stadiums = rescheck1.map((stadium) => stadium.stadium_name+" "+stadium.stadium_country);
+    const stadiums = rescheck1.map((stadium) => stadium.stadium_id + ". " + stadium.stadium_name+" "+stadium.stadium_country);
     console.log(stadiums);
     return NextResponse.json({ stadiums: stadiums }, { status: 200 })
   } catch (err) {
